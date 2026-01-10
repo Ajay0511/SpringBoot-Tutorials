@@ -46,4 +46,13 @@ public class EmployeeService {
     public String fetchEmployee() {
         return repository.getEmployee();
     }
+
+    public EmployeeDto update(Long id, EmployeeDto employeeDto) {
+        employeeDataStore.put(id, employeeDto);
+        return employeeDto;
+    }
+
+    public void delete(Long id) {
+        employeeDataStore.remove(id);
+    }
 }

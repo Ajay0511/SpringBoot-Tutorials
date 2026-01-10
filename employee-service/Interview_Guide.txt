@@ -1,0 +1,280 @@
+🗓 DAY 1 — Spring Boot Basics & Bootstrapping
+
+❓ What is Spring Boot?
+✅ Answer:
+Spring Boot is an opinionated framework that simplifies Spring application development by providing auto-configuration, embedded servers, and production-ready features.
+
+❓ What problems does Spring Boot solve?
+✅ Answer:
+- Eliminates boilerplate configuration
+- No need for external application servers
+- Simplifies dependency management
+- Faster application startup
+
+❓ What is @SpringBootApplication?
+✅ Answer:
+It is a composite annotation that includes:
+- @Configuration
+- @EnableAutoConfiguration
+- @ComponentScan
+
+❓ What happens when a Spring Boot application starts?
+“SpringApplication.run() bootstraps the application, creates the ApplicationContext, performs classpath scanning, applies auto-configurations, and starts the embedded server.”✅ Answer:
+- Application context is created
+- Auto-configuration is applied
+- Beans are scanned and registered
+- Embedded server (Tomcat) starts
+- Application is ready to accept requests
+
+❓ What is embedded Tomcat?
+✅ Answer:
+An embedded servlet container bundled with Spring Boot, allowing applications to run as standalone JARs without deploying to external servers.
+
+❓ Difference between Spring and Spring Boot?
+✅ Answer:
+| Feature | Spring | Spring Boot |
+|---------|--------|------------|
+| Configuration | Requires manual config | Auto-configuration |
+| Server | External server needed | Embedded server |
+| Approach | XML-heavy | Java & annotation-based |
+
+❓ What is Spring Initializr?
+✅ Answer:
+A tool to generate Spring Boot projects with predefined dependencies and project structure.
+
+❓ How does Spring Boot know which packages to scan?
+✅ Answer:
+By default, it scans the package of the main class and all its sub-packages.
+
+---
+
+🗓 DAY 2 — Layered Architecture, DTO & Entity
+
+❓ What is layered architecture in Spring Boot?
+✅ Answer:
+A design pattern that separates responsibilities into layers:
+- Controller Layer (HTTP handling)
+- Service Layer (Business logic)
+- Repository Layer (Data access)
+
+❓ Why do we need a Service layer?
+✅ Answer:
+To encapsulate business logic and prevent controllers from becoming fat and unmaintainable.
+
+❓ Why should controllers not contain business logic?
+✅ Answer:
+Because controllers should handle HTTP concerns only and delegate business logic to services for better maintainability and testability.
+
+❓ What is a DTO?
+✅ Answer:
+A Data Transfer Object used to transfer data between layers, especially between client and server, without exposing internal domain models.
+
+❓ Why should we not expose Entity directly in APIs?
+✅ Answer:
+- Security risks (over-posting attacks)
+- Tight coupling with database schema
+- API breaks when database structure changes
+
+❓ Why do we accept DTO in @RequestBody?
+✅ Answer:
+Because DTO defines the API contract and protects internal domain models from client manipulation.
+
+❓ Why is DTO placed in Service layer and not Repository?
+✅ Answer:
+Repositories deal only with entities and persistence, while DTOs are used for business logic and data transfer between client and server.
+DTOs belong to the API and business layers, while repositories operate strictly on persistence models (Entities). Mixing DTOs with repositories violates separation of concerns.
+
+❓ Can we use Entity directly for small projects?
+✅ Answer:
+Yes, but it violates clean architecture principles and becomes hard to maintain as the application grows.
+
+---
+
+🗓 DAY 3 — Jackson, DTO Design & Deserialization
+
+❓ How does Spring convert JSON to Java objects?
+✅ Answer:
+Spring uses Jackson's ObjectMapper internally to deserialize JSON into Java objects based on property names and types.
+
+❓ What is @RequestBody?
+✅ Answer:
+It binds the HTTP request body to a Java object using HTTP message converters, automatically parsing JSON/XML to Java objects.
+
+❓ Why do DTOs require a no-args constructor?
+✅ Answer:
+Jackson uses reflection to instantiate objects and requires a default constructor unless configured otherwise with custom deserialization logic.
+
+❓ Why setters are required in DTO?
+✅ Answer:
+Jackson populates object fields using setters or direct field access during deserialization of incoming JSON data.
+Jackson requires either setters, public fields, or field access (via reflection). Setters are preferred for encapsulation and flexibility.
+
+❓ Difference between primitive and wrapper types in DTO?
+✅ Answer:
+| Feature | Primitive | Wrapper |
+|---------|-----------|---------|
+| Null value | Cannot be null | Can be null |
+| API safety | Causes deserialization errors | Safe for APIs |
+| Default value | Has default value | null by default |
+
+❓ Why should DTO fields use wrapper types?
+✅ Answer:
+Because incoming JSON may omit fields, and wrapper types allow null values without causing deserialization errors.
+
+❓ What causes ClassNotFoundException vs NoClassDefFoundError?
+✅ Answer:
+- ClassNotFoundException: Class not found during dynamic loading at runtime
+- NoClassDefFoundError: Class present at compile time but missing at runtime
+
+❓ Why did we get JSON parse error for long id?
+✅ Answer:
+Because Jackson cannot assign null to primitive types when the client does not send the field. Use Long (wrapper) instead of long (primitive).
+
+❓ Should client send id during create API?
+✅ Answer:
+No. ID should be generated by the database (auto-increment), not the client. Client should omit the id field during creation.
+
+---
+
+🗓 DAY 4 — Bean Validation & Global Exception Handling
+
+❓ What does @Valid do?
+✅ Answer:
+@Valid triggers bean validation before the controller method is executed. If validation fails, a MethodArgumentNotValidException is thrown.
+
+❓ Where does validation failure occur?
+✅ Answer:
+During argument resolution phase, before entering the controller method body. Spring intercepts the request at this stage.
+
+❓ Why 400 and not 500?
+✅ Answer:
+Validation errors are client-side input errors, not server failures. HTTP 400 (Bad Request) indicates the client sent invalid data, while 500 (Internal Server Error) indicates a server-side failure.
+
+❓ Difference between @ControllerAdvice and @ExceptionHandler?
+✅ Answer:
+- @ExceptionHandler: Handles exceptions locally within a specific controller
+- @RestControllerAdvice: Applies exception handling globally across all controllers in the application
+
+❓ Why not validate in service layer?
+✅ Answer:
+Validation is a boundary concern that should occur at the entry point of your application. The service layer assumes it receives valid input and focuses on business logic rather than input validation.
+“Service layer validation is business validation; input validation belongs to the boundary (controller).”
+
+❓ What is @RestControllerAdvice?
+✅ Answer:
+A composite annotation combining @ControllerAdvice with @ResponseBody. It centralizes exception handling across controllers and automatically serializes exception responses to JSON.
+
+❓ Why use @NotBlank instead of @NotNull?
+✅ Answer:
+- @NotNull: Allows empty strings and whitespace
+- @NotBlank: Rejects null, empty strings, and whitespace-only strings for better data quality
+
+❓ What happens when validation fails?
+✅ Answer:
+Spring catches the exception, calls the appropriate @ExceptionHandler method, and returns a structured error response with HTTP 400 status and validation error details.
+
+
+
+🗓 DAY 5 — REST APIs (GET, POST, PUT, DELETE) + PathVariable & RequestParam
+
+❓ What is a REST API?
+✅ Answer:
+REST (Representational State Transfer) is an architectural style where resources are accessed using HTTP methods. A REST API is stateless, uses standard HTTP methods, and operates on resources rather than actions.
+
+Example:
+- GET /employees
+- GET /employees/101
+- POST /employees
+- PUT /employees/101
+- DELETE /employees/101
+
+❓ Difference between HTTP Methods?
+✅ Answer:
+| Method | Purpose | Idempotent | Used for |
+|--------|---------|------------|----------|
+| GET | Fetch data | ✅ Yes | Read |
+| POST | Create data | ❌ No | Create |
+| PUT | Update entire resource | ✅ Yes | Update |
+| PATCH | Partial update | ❌ No | Partial update |
+| DELETE | Delete resource | ✅ Yes | Delete |
+
+❓ What does idempotent mean?
+✅ Answer:
+An operation is idempotent if calling it multiple times produces the same result as calling it once. GET, PUT, and DELETE are idempotent; POST and PATCH are not.
+
+❓ What is @PathVariable?
+✅ Answer:
+@PathVariable extracts variable values from the URL path. Example: In /employees/{id}, @PathVariable Long id captures the id value from the URL.
+
+❓ What is @RequestParam?
+✅ Answer:
+@RequestParam extracts query parameters from the URL. Example: /employees?department=IT extracts the department parameter from the query string.
+
+❓ Difference between @PathVariable and @RequestParam?
+✅ Answer:
+| Feature | @PathVariable | @RequestParam |
+|---------|---------------|---------------|
+| Location | URL path | Query string |
+| Purpose | Resource identifier | Filtering/filtering |
+| Required | Usually mandatory | Optional by default |
+| Example | /employees/101 | /employees?department=IT |
+
+❓ Why use PathVariable for ID and RequestParam for filters?
+✅ Answer:
+PathVariable identifies the specific resource (unique),  while RequestParam provides optional filtering or sorting criteria to query parameters.
+
+❓ What is HTTP idempotency used for?
+✅ Answer:
+Idempotency ensures that retrying a request (due to network failures) does not cause unintended side effects. Safe methods like GET and PUT can be safely retried.
+
+❓ Why is POST not idempotent?
+✅ Answer:
+Because calling POST multiple times creates multiple resources, each call produces a different result (new ID), making it non-idempotent.
+
+
+❓ What HTTP status code should POST return?
+✅ Answer:
+HTTP 201 (Created) indicates successful resource creation. The response should include the created resource and its location header.
+
+❓ What HTTP status code should GET return?
+✅ Answer:
+HTTP 200 (OK) indicates successful retrieval of requested data.
+
+❓ What is request body?
+✅ Answer:
+Binds incoming JSON request body to a Java object using Jackson.
+    @PostMapping("/employees")
+    public EmployeeDto create(@RequestBody EmployeeDto dto)
+
+❓ Why POST uses @RequestBody but GET doesn’t?
+✅ Answer:
+GET requests should not have body
+POST sends data in body for creation
+
+❓ Why do we use separate HTTP methods instead of one endpoint?
+✅ Answer:
+Because REST follows uniform interface constraints and improves clarity, caching, and semantics.
+
+❓ Why PUT is idempotent?
+✅ Answer:
+Calling PUT multiple times with same data results in same state.
+
+❓ Can GET have a request body?
+✅ Answer:
+Technically possible but not recommended and not supported by Spring.
+
+❓ Why @RestController instead of @Controller?
+✅ Answer:
+@RestController combines @Controller + @ResponseBody.
+
+❓ Why constructor injection is preferred?
+✅ Answer:
+Immutability
+Better testability
+Avoids null beans
+
+❓ What is PATCH?
+
+✅ Answer (Interview-ready):
+PATCH is an HTTP method used to partially update a resource.
+Unlike PUT, which replaces the entire resource, PATCH modifies only the specified fields.
