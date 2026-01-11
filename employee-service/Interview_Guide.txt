@@ -278,3 +278,113 @@ Avoids null beans
 ✅ Answer (Interview-ready):
 PATCH is an HTTP method used to partially update a resource.
 Unlike PUT, which replaces the entire resource, PATCH modifies only the specified fields.
+
+
+🗓 DAY 6 — Spring Boot JPA & Database Integration
+
+❓ What is JPA?
+✅ Answer:
+JPA (Java Persistence API) is a Java specification for managing relational data in applications using ORM (Object-Relational Mapping).
+Maps Java objects → database tables
+Allows CRUD operations without writing SQL manually
+Spring Boot uses Spring Data JPA as its implementation (usually Hibernate by default).
+
+❓ Difference between JPA and Hibernate
+Feature	                    JPA	            Hibernate
+Type	                Specification	Implementation of JPA
+Vendor	                Standard API	Specific ORM library
+Requirement	Needs       JPA provider	Provides full JPA + extra features
+Portability	                High	    Less portable if using Hibernate-specific features
+
+❓ What is an Entity?
+✅ Answer:
+A Java class annotated with @Entity representing a database table.
+Fields map to table columns.
+Requires a primary key annotated with @Id.
+
+❓ What is a Repository?
+✅ Answer:
+Interface to handle database operations using JPA.
+Extends Spring Data interfaces like JpaRepository or CrudRepository.
+Spring Boot automatically generates the implementation at runtime.
+
+❓ Why use Spring Data JPA?
+✅ Answer:
+Reduces boilerplate code
+Provides ready-to-use methods: save(), findById(), findAll(), deleteById()
+Supports derived queries (method names define SQL)
+Integrates with transactions and paging/sorting easily
+
+❓ Difference between CrudRepository and JpaRepository
+Feature	                    CrudRepository	                    JpaRepository
+CRUD methods	    ✅ save, findAll, findById, delete	      ✅ All + batch save, flush, pagination
+Pagination & Sorting	    ❌ Limited	                      ✅ Full support
+Custom Queries	            ✅ JPQL or derived	              ✅ JPQL, derived, native SQL
+
+
+❓ What is @GeneratedValue?
+✅ Answer:
+Defines automatic ID generation strategy for primary key:
+IDENTITY → Auto-increment (MySQL, PostgreSQL)
+SEQUENCE → Uses DB sequence
+AUTO → Spring picks default strategy
+TABLE → Uses a table to simulate sequence
+
+
+❓ Transaction Management
+✅ Answer:
+Spring Boot manages transactions automatically using @Transactional.
+CRUD operations in JPA are transactional.
+Ensures atomicity: all changes succeed or fail together.
+
+❓ Why DTO instead of Entity in APIs?
+✅ Answer is the same as Day 2/3:
+Security: prevents exposing DB schema
+Loose coupling: API evolves independently from DB
+Better validation and mapping
+
+❓ Why use JPA instead of JDBC?
+✅ Answer:
+JPA provides object-relational mapping, so you can work with objects instead of SQL queries.
+Handles connection management, caching, lazy loading automatically.
+Supports database portability without changing code (use same entities for MySQL, Postgres, etc.)
+Reduces boilerplate like ResultSet parsing, PreparedStatement setup, exception handling.
+
+❓ What is @GeneratedValue?
+✅ Answer (additional details):
+Can define strategy per database to optimize inserts.
+Can combine with @SequenceGenerator or @TableGenerator for custom ID generation rules.
+Supports UUID, custom sequences beyond numeric auto-increment.
+
+❓ What does spring.jpa.hibernate.ddl-auto=update do?
+✅ Answer:
+Automatically updates database schema to match entity definitions.
+Does not delete data; only adds or alters columns/tables.
+Useful in development, but should not be used in production (risk of data loss).
+Other options:
+validate → checks schema matches entities, no changes
+create → drops & recreates schema every startup
+create-drop → same as create, drops schema on shutdown
+
+❓ How does Spring Boot create repository implementation automatically?
+✅ Answer:
+Spring Data uses dynamic proxies to generate a class at runtime that implements your repository interface.
+The generated class handles CRUD operations, query methods, pagination, and sorting.
+Custom methods with derived queries (like findByName) are parsed by Spring, and the appropriate JPQL query is generated automatically.
+
+❓ What is the advantage of service layer in JPA?
+✅ Answer:
+Encapsulates transaction boundaries using @Transactional.
+Provides a place to add business logic, so repository stays focused on persistence only.
+Makes code testable, as services can be mocked independently of DB.
+Reduces tightly coupled controllers, promoting clean architecture.
+
+❓ Difference between save() for new entity vs existing entity?
+✅ Answer:
+New entity (no ID assigned / null ID):
+save() performs an INSERT into the database.
+JPA sets the generated ID back on the entity.
+Existing entity (ID present and managed):
+save() performs an UPDATE.
+Only changes in entity fields are persisted.
+Key point: JPA decides INSERT vs UPDATE based on entity identity and persistence context.

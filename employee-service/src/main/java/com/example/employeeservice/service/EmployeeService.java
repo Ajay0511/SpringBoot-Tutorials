@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.employeeservice.repository.EmployeeRepository;
 import com.example.employeeservice.dto.EmployeeDto;
+import com.example.employeeservice.entity.Employee;
+
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,9 +45,9 @@ public class EmployeeService {
         return employeeDataStore.get(id);
     }
 
-    public String fetchEmployee() {
-        return repository.getEmployee();
-    }
+    // public String fetchEmployee() {
+    //     return repository.getEmployee();
+    // }
 
     public EmployeeDto update(Long id, EmployeeDto employeeDto) {
         employeeDataStore.put(id, employeeDto);
@@ -54,5 +56,26 @@ public class EmployeeService {
 
     public void delete(Long id) {
         employeeDataStore.remove(id);
+    }
+
+    public Employee createEmployee(Employee employee) {
+        return repository.save(employee);
+    }
+
+    public List<Employee> getAllEmployees() {
+        return repository.findAll();
+    }
+
+    public Employee getEmployeeById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public Employee updateEmployee(Long id, Employee employee){
+        employee.setId(id);
+        return repository.save(employee);
+    }
+
+    public void deleteEmployee(Long id) {
+        repository.deleteById(id);
     }
 }

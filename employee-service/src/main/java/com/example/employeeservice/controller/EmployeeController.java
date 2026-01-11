@@ -17,10 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
-
-
 
 
 @RestController
@@ -38,10 +35,10 @@ public class EmployeeController {
         return "Employee Service is called";
     }
 
-    @GetMapping("v1/employee")
-    public String getEmployee() {
-        return service.fetchEmployee(); 
-    }
+    // @GetMapping("v1/employee")
+    // public String getEmployee() {
+    //     return service.fetchEmployee(); 
+    // }
 
     @PostMapping("v1/create")
     public ResponseEntity<EmployeeDto> createEmployeeDto(@Valid @RequestBody EmployeeDto employeeDto) {        
