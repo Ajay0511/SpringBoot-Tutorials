@@ -388,3 +388,135 @@ Existing entity (ID present and managed):
 save() performs an UPDATE.
 Only changes in entity fields are persisted.
 Key point: JPA decides INSERT vs UPDATE based on entity identity and persistence context.
+
+
+🗓 DAY 7 — Spring Security: Basic Authentication
+❓ What is Spring Security?
+✅ Answer:
+Spring Security is a framework that provides authentication, authorization, and protection against common attacks for Spring applications.
+It secures:
+Who you are → Authentication
+What you can do → Authorization
+It works as a filter chain in front of your Spring Boot controllers.
+
+❓ What happens when Spring Security is added to a project?
+✅ Answer:
+The moment you add the spring-boot-starter-security dependency:
+All endpoints become secured
+A login form is auto-generated
+A default user is created
+Password is printed in logs
+You must authenticate to access any endpoint
+This is called secure by default.
+
+❓ What is Authentication?
+✅ Answer:
+Authentication is the process of verifying who the user is.
+Examples:
+Username + Password
+Token (JWT)
+OAuth login
+If identity is verified → user is authenticated.
+
+❓ What is Authorization?
+✅ Answer:
+Authorization decides what an authenticated user is allowed to do.
+Example:
+Admin → can delete users
+Normal user → can only view data
+Authentication comes first, authorization comes after.
+
+❓ What is Basic Authentication?
+✅ Answer:
+Basic Authentication is an HTTP-based authentication scheme where:
+Username and password are sent in every request
+Encoded using Base64
+Header:
+Authorization: Basic base64(username:password)
+It is:
+Simple
+Stateless
+Not secure without HTTPS
+
+
+❓ Why is Basic Auth considered weak?
+✅ Answer:
+Because:
+Credentials are sent on every request
+Base64 is NOT encryption (easily decoded)
+If HTTPS is not used, credentials can be stolen
+So it is only used for:
+Internal services
+Prototypes
+Learning security
+
+❓ How does Spring Security process a request?
+✅ Answer:
+Spring Security uses a Filter Chain:
+Request comes in
+Security filters run
+Authentication happens
+Authorization happens
+If allowed → controller is called
+If not → 401 or 403 returned
+Your controller never sees unauthorized requests.
+
+❓ What is a Security Filter Chain?
+✅ Answer:
+A sequence of security filters that intercept every HTTP request before it reaches controllers.
+It handles:
+Login
+Authentication
+CSRF(Cross-Site Request Forgery) is a web security vulnerability where attackers trick authenticated users into performing unwanted actions (like changing passwords or making purchases) on a trusted website without their consent, by exploiting the browser's automatic sending of session cookies.
+Authorization
+Logout
+Session management
+
+❓ What is UserDetailsService?
+✅ Answer:
+It is the interface Spring Security uses to load user data.
+
+Spring calls:
+loadUserByUsername(username)
+
+It must return:
+Username
+Password
+Roles
+Spring never talks directly to DB — it talks through this interface.
+
+❓ What is AuthenticationManager?
+✅ Answer:
+It is the core component that:
+Takes username + password
+Uses UserDetailsService
+Uses PasswordEncoder
+Decides if login is valid
+It is the brain of authentication.
+
+❓ What is PasswordEncoder?
+✅ Answer:
+Used to hash and verify passwords.
+Spring never stores plain passwords.
+It compares hashed passwords.
+Example:
+BCryptPasswordEncoder
+
+❓ What is the difference between 401 and 403?
+✅ Answer:
+Code	Meaning
+401	Not authenticated (no login)
+403	Authenticated but not allowed
+
+❓ @Configuration
+✅ Answer:
+The @Configuration annotation is a core Spring annotation used to declare a class as a source of bean definitions for the Spring application context. 
+It indicates that the class contains methods annotated with @Bean, which will be processed by the Spring container to generate beans and wire dependencies. 
+This allows you to define your application's structure using Java instead of XML. 
+
+❓ @EnableWebSecurity 
+✅ Answer:
+The @EnableWebSecurity annotation is a specialized Spring Security annotation. Its primary functions are: 
+Enables Web Security: It activates Spring Security's web security support.
+Sets up the Filter Chain: It sets up the FilterChainProxy, which is the core filter that intercepts incoming HTTP requests and applies the necessary security rules.
+Imports Core Configuration: It imports the WebSecurityConfiguration class internally, which exports necessary beans and provides a foundation for security customization. 
