@@ -520,3 +520,58 @@ The @EnableWebSecurity annotation is a specialized Spring Security annotation. I
 Enables Web Security: It activates Spring Security's web security support.
 Sets up the Filter Chain: It sets up the FilterChainProxy, which is the core filter that intercepts incoming HTTP requests and applies the necessary security rules.
 Imports Core Configuration: It imports the WebSecurityConfiguration class internally, which exports necessary beans and provides a foundation for security customization. 
+
+❓ What is JWT?
+✅ Answer (Interview-ready):
+JWT (JSON Web Token) is a compact, URL-safe token used to securely transmit claims between client and server.
+It is stateless, meaning the server does not store session data.
+
+❓ Why JWT over Basic Authentication?
+✅ Answer:
+Basic Auth                                  	JWT
+Credentials sent on every request	 |    Token sent instead
+Stateful / less scalable	         |    Stateless & scalable
+Not suitable for microservices	     |    Ideal for microservices
+No expiration control	             |    Supports expiry & refresh
+
+
+❓ What does “stateless authentication” mean?
+✅ Answer:
+The server does not store user session data.
+Each request carries all authentication information inside the JWT.
+
+❓ Structure of JWT?
+✅ Answer:
+JWT has 3 parts, separated by dots:
+HEADER.PAYLOAD.SIGNATURE
+Header → Algorithm & token type
+Payload → Claims (username, roles, expiry)
+Signature → Verifies token integrity
+
+❓ How JWT authentication flow works?
+✅ Answer:
+Client sends username + password to /login
+Server validates credentials
+Server generates JWT
+Client stores JWT (header/local storage)
+Client sends JWT in Authorization header
+Server validates JWT for every request
+
+❓ Where is JWT sent in request?
+✅ Answer:
+Authorization: Bearer <JWT_TOKEN>
+
+❓ Why JWT is preferred in microservices?
+✅ Answer:
+No session replication
+Works across services
+Lightweight
+Scales horizontally
+
+❓ Can JWT be revoked?
+✅ Answer:
+Not directly (stateless).
+Solutions:
+Short expiry
+Token blacklist
+Refresh tokens
