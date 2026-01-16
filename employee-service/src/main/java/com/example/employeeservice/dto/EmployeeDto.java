@@ -21,6 +21,12 @@ public class EmployeeDto {
         return id;
     }
 
+    public void setId(Long id){
+        this.id = id;
+    }
+
+
+
     //Bean Validation to avoid garbage data stored in DB
     @NotBlank(message = "Name cannot be blank")
     public String getName() {
@@ -32,5 +38,12 @@ public class EmployeeDto {
         return department;
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setDepartment(String department){
+        this.department = department;
+    }
 
 }

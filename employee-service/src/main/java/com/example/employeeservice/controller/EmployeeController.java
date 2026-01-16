@@ -8,6 +8,7 @@ import com.example.employeeservice.service.EmployeeService;
 
 import jakarta.validation.Valid;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,38 @@ public class EmployeeController {
 
     private final EmployeeService service;
 
+    private List<EmployeeDto> employees = Arrays.asList(
+        new EmployeeDto(1L, "Ajay", "Iiii"),
+        new EmployeeDto(2L, "Sameer", "Hrr")
+    );
+
     public EmployeeController(EmployeeService service) {
         this.service = service;
+    }
+
+    @GetMapping("/v1/employees")
+    public List<EmployeeDto> getEmployeesV1() {
+        return employees;  // Simple list
+    }
+
+    @GetMapping("/v2/employees")
+    public List<EmployeeDto> getEmployeesV2() {
+        // V2 includes department in uppercase as a new behavior
+        employees.forEach(e -> e.setDepartment(e.getDepartment().toUpperCase()));
+        return employees;
+    }
+
+    // --------- Header Versioning ---------
+    @GetMapping(value = "/employees", headers = "X-API-VERSION=1")
+    public List<EmployeeDto> getEmployeesHeaderV1() {
+        employees.forEach(e -> e.setDepartment(e.getDepartment().toLowerCase()));
+        return employees;
+    }
+
+    @GetMapping(value = "/employees", headers = "X-API-VERSION=5")
+    public List<EmployeeDto> getEmployeesHeaderV2() {
+        employees.forEach(e -> e.setDepartment(e.getDepartment().toUpperCase()));
+        return employees;
     }
 
     @GetMapping("v1/hello")

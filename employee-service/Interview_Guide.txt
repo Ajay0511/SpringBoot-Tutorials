@@ -521,6 +521,7 @@ Enables Web Security: It activates Spring Security's web security support.
 Sets up the Filter Chain: It sets up the FilterChainProxy, which is the core filter that intercepts incoming HTTP requests and applies the necessary security rules.
 Imports Core Configuration: It imports the WebSecurityConfiguration class internally, which exports necessary beans and provides a foundation for security customization. 
 
+🗓 DAY 8 — JWT Authentication 
 ❓ What is JWT?
 ✅ Answer (Interview-ready):
 JWT (JSON Web Token) is a compact, URL-safe token used to securely transmit claims between client and server.
@@ -575,3 +576,173 @@ Solutions:
 Short expiry
 Token blacklist
 Refresh tokens
+
+Client
+  |
+  | 1️⃣ Login Request (POST /api/auth/login)
+  |    Body: { "username": "Ajay", "password": "password" }
+  v
+Spring Boot Controller (AuthController)
+  |
+  | 2️⃣ Authenticate using AuthenticationManager
+  v
+AuthenticationManager
+  |
+  | 3️⃣ Calls UserDetailsService.loadUserByUsername()
+  v
+UserDetailsService (InMemory or DB)
+  |
+  | 4️⃣ Returns UserDetails (username, password, roles)
+  v
+AuthenticationManager
+  |
+  | 5️⃣ Verifies password using PasswordEncoder
+  v
+AuthController
+  |
+  | 6️⃣ Generate JWT token using JwtUtil
+  v
+Client
+  |
+  | 7️⃣ Store JWT token (LocalStorage/Session)
+  v
+Future Requests (GET /employees, etc.)
+  |
+  | 8️⃣ Attach JWT in Authorization header: Bearer <token>
+  v
+Spring Security Filter Chain
+  |
+  | 9️⃣ JwtFilter (OncePerRequestFilter)
+  |    - Extract token from header
+  |    - Validate token
+  |    - Extract username
+  |    - Load UserDetails from UserDetailsService
+  |    - Set Authentication in SecurityContext
+  v
+SecurityContextHolder
+  |
+  | 🔟 Controller executed if authenticated
+  |    If unauthorized → return 401/403
+  v
+Controller (e.g., EmployeeController)
+  |
+  | 11️⃣ Perform business logic, return response
+  v
+Client
+  |
+  | 12️⃣ Receives response
+
+
+
+🗓 DAY 9 — API Versioning + HATEOAS
+
+❓ Why is API versioning needed?
+✅ Answer:
+API versioning is required to maintain backward compatibility. When you update an API, existing clients may break if the old endpoints are modified. Versioning ensures:
+Existing clients continue to work
+New features can be added safely
+Deprecation of old functionality can be handled gradually
+
+❓ What are the common API versioning strategies?
+✅ Answer:
+URI Versioning
+Example: /api/v1/employees
+Version is part of the URL
+Pros: Simple, easy to test
+Cons: URL changes for every version
+
+Request Parameter Versioning
+Example: /employees?version=1
+Pros: Flexible, no URL changes
+Cons: Not cache-friendly, less intuitive
+
+Header Versioning
+Example: X-API-VERSION: 1
+Pros: Clean URL, no query params
+Cons: Harder to test via browser
+
+Media Type / Accept Header Versioning
+Example: Accept: application/vnd.company.v1+json
+Pros: Pure REST approach
+Cons: Complex, rarely used
+
+❓ Which versioning approach is most commonly used?
+✅ Answer:
+URI Versioning is most common in real-world projects.
+Header and media type versioning are more REST-pure but less practical.
+Interviews often ask both: pros/cons and “how to implement in Spring Boot.”
+
+❓ How do you implement API versioning in Spring Boot?
+✅ Answer:
+URI versioning: Define separate endpoints per version in the controller.
+@GetMapping("/api/v1/employees")
+public List<EmployeeDto> getEmployeesV1() { ... }
+@GetMapping("/api/v2/employees")
+public List<EmployeeDto> getEmployeesV2() { ... }
+
+
+Header versioning: Use @RequestMapping with headers attribute.
+@GetMapping(value = "/employees", headers = "X-API-VERSION=1")
+public List<EmployeeDto> getEmployeesV1() { ... }
+
+Media type versioning: Use produces attribute.
+@GetMapping(value = "/employees", produces = "application/vnd.company.v1+json")
+public List<EmployeeDto> getEmployeesV1() { ... }
+
+
+HATEOAS (Hypermedia as the Engine of Application State)
+❓ What is HATEOAS?
+✅ Answer:
+HATEOAS is a REST principle where the API response contains links to related resources.
+It allows clients to navigate the API dynamically
+Reduces hard-coded endpoint knowledge on the client
+Example:
+{
+  "id": 101,
+  "name": "Ajay",
+  "_links": {
+    "self": { "href": "/api/v1/employees/101" },
+    "all-employees": { "href": "/api/v1/employees" }
+  }
+}
+
+
+❓ Why HATEOAS is rarely used but often asked in interviews?
+✅ Answer:
+Rare in real-world projects because: extra overhead, most clients know endpoints, simpler REST works fine
+Popular in interviews to test understanding of REST maturity levels
+
+❓ What are the benefits of HATEOAS?
+✅ Answer:
+Clients don’t hardcode URLs
+API can evolve independently
+Supports discoverability of resources
+Aligns with Richardson Maturity Level 3 (fully RESTful)
+
+❓ How do you implement HATEOAS in Spring Boot?
+✅ Answer:
+Use spring-boot-starter-hateoas dependency
+Wrap responses in EntityModel or CollectionModel
+Add links using WebMvcLinkBuilder
+
+Example:
+@GetMapping("/employees/{id}")
+public EntityModel<EmployeeDto> getEmployee(@PathVariable Long id) {
+    EmployeeDto employee = service.findById(id);
+    return EntityModel.of(employee,
+        linkTo(methodOn(EmployeeController.class).getEmployee(id)).withSelfRel(),
+        linkTo(methodOn(EmployeeController.class).getAllEmployees()).withRel("all-employees"));
+}
+
+
+❓ Difference between normal REST and HATEOAS REST?
+✅ Answer:
+Feature	                Normal REST	                HATEOAS REST
+Links	            No links in response	    Response contains navigable links
+Client knowledge	Hardcoded endpoints	        Clients discover endpoints dynamically
+REST maturity	        Level 2	                Level 3 (Richardson Maturity Model)
+
+❓ Interview tip for HATEOAS:
+✅ Answer:
+Explain the principle, give JSON example, mention Spring HATEOAS classes like EntityModel, CollectionModel, WebMvcLinkBuilder.
+Highlight that it improves discoverability and aligns with Level 3 REST.
