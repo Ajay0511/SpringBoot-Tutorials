@@ -3,8 +3,11 @@ package com.example.employeeservice.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.employeeservice.dto.EmployeeDto;
 import com.example.employeeservice.entity.Employee;
 
 /*
@@ -34,6 +37,39 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     //     return "Employee from Employee Repository";
     // }
     List<Employee> findByDepartment(String department);
+
+    //JPQL
+    @Query("SELECT e from Employee e")  //jpql does not use table name, but entity name so employee give error
+    List<Employee> findAllEmployeesJPQL();
+
+    @Query("select e from Employee e where e.department = :department")
+    List<Employee> findByDepartmentJPQL(@Param("department") String department);
+
+    @Query("select e from Employee e where e.salary > :salary")
+    List<Employee> findHigherSalary(@Param("salary") double salary);
+
+    @Query("select new com.example.employeeservice.dto.EmployeeDto(e.id, e.name, e.department) FROM Employee e")
+    public List<EmployeeDto> getEmployeeDtos();
+
+
+    //Native Queries
+    @Query(value = "select * from employees", nativeQuery = true)
+    List<Employee> getAllEmployeesNative();
+
+    @Query(value = "select * from employees where department = :department", nativeQuery =  true)
+    List<Employee> getEmployeeByDepartmentNative(@Param("department") String department);
+
+    @Query(value = "select * from employees where salary > ?1", nativeQuery = true)
+    List<Employee> getEmployeesByHighSalaryNative(double salary);
+
+    @Query(value = "SELECT name, department FROM employees", nativeQuery = true)
+    List<Object[]> fetchNameAndDepartmentNative();
+
+    @Query(value = "SELECT * FROM employees ORDER BY salary DESC LIMIT 5", nativeQuery = true)
+    List<Employee> findTop5HighestPaid();
+
+
+
 
 
 }

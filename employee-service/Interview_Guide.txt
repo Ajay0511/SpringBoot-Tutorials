@@ -746,3 +746,365 @@ REST maturity	        Level 2	                Level 3 (Richardson Maturity Model
 ✅ Answer:
 Explain the principle, give JSON example, mention Spring HATEOAS classes like EntityModel, CollectionModel, WebMvcLinkBuilder.
 Highlight that it improves discoverability and aligns with Level 3 REST.
+
+📅 DAY 10 — MySQL + JPQL + Native Queries
+❓ Why do we use MySQL with Spring Boot instead of H2?
+✅ Answer:
+MySQL is production-grade RDBMS, H2 is in-memory mainly for testing/dev.
+
+❓ What properties are required to connect Spring Boot to MySQL?
+✅ Answer:
+spring.datasource.url
+spring.datasource.username
+spring.datasource.password
+spring.jpa.hibernate.ddl-auto
+spring.jpa.database-platform
+
+❓ What does spring.jpa.hibernate.ddl-auto do?
+✅ Answer:
+Controls DB schema generation (none, update, create, create-drop).
+
+❓ What is JPQL?
+✅ Answer:
+Object-oriented query language that works on entities and fields, not tables.
+
+❓ Difference between JPQL and SQL?
+✅ Answer:
+JPQL works on entities, SQL works on tables.
+
+❓ Example of JPQL query?
+✅ Answer:
+@Query("SELECT e FROM Employee e WHERE e.department = :dept")
+List<Employee> findByDepartment(String dept);
+
+❓ Can JPQL perform joins?
+✅ Answer:
+Yes.
+
+❓ Does JPQL support aggregation functions?
+✅ Answer:
+Yes (COUNT, SUM, AVG, MIN, MAX).
+
+❓ What is a native query?
+✅ Answer:
+DB-specific SQL query executed directly on database.
+
+❓ When should native queries be used?
+✅ Answer:
+Complex queries, DB-specific features, performance optimization.
+
+❓ Example of native query?
+✅ Answer:
+@Query(value = "SELECT * FROM employees WHERE department = ?1", nativeQuery = true)
+List<Employee> findByDeptNative(String dept);
+
+❓ Which annotation is used for custom queries?
+✅ Answer:
+@Query
+
+❓ Difference between positional and named parameters?
+✅ Answer:
+Positional uses ?1, named uses :name.
+
+❓ Can JPQL and native queries be used in same repository?
+✅ Answer:
+Yes.
+
+❓ What is projection in JPA?
+✅ Answer:
+Fetching partial data instead of full entity.
+
+❓ What is DTO mapping in queries?
+✅ Answer:
+Mapping query result directly to DTO object.
+
+❓ What happens if DB column names don’t match entity fields in native query?
+✅ Answer:
+Mapping fails unless @Column(name="") or projection/DTO mapping is used.
+
+❓ Is JPQL database independent?
+✅ Answer:
+Yes.
+
+❓ Is native query database independent?
+✅ Answer:
+No.
+
+❓ Which is preferred for portability?
+✅ Answer:
+JPQL.
+
+❓ Which is preferred for performance tuning?
+✅ Answer:
+Native Query.
+
+❓ What is JPQL?
+✅ Answer:
+JPQL is an object-oriented query language used in JPA.
+It works on Entity objects and their fields, not on database tables or columns.
+
+👉 JPQL is database-independent.
+
+❓ What does JPQL query over?
+✅ Answer:
+JPQL queries:
+Entities (Java classes)
+Entity fields (Java properties)
+❌ It does NOT use:
+Table names
+Column names
+❓ Basic JPQL example – fetch all employees
+✅ Answer:
+
+@Query("SELECT e FROM Employee e")
+List<Employee> findAllEmployees();
+✔ Employee → Entity name
+✔ e → alias
+✔ returns managed entities
+
+❓ JPQL example with WHERE condition
+✅ Answer:
+
+@Query("SELECT e FROM Employee e WHERE e.department = :dept")
+List<Employee> findByDepartment(@Param("dept") String dept);
+✔ Uses entity field names
+✔ Supports named parameters
+
+❓ JPQL example using method name vs @Query
+✅ Answer:
+Method name:
+List<Employee> findByDepartment(String department);
+
+JPQL:
+@Query("SELECT e FROM Employee e WHERE e.department = :department")
+List<Employee> fetchByDepartment(@Param("department") String department);
+
+
+👉 Both generate JPQL internally
+
+❓ JPQL example with projection (DTO)
+✅ Answer:
+@Query("SELECT new com.example.dto.EmployeeDto(e.id, e.name) FROM Employee e")
+List<EmployeeDto> fetchEmployeeDtos();
+✔ Avoids sending full entity
+✔ Faster & API-safe
+
+❓ Is JPQL translated to SQL?
+✅ Answer:
+Yes.
+Hibernate converts JPQL → SQL based on the database dialect (MySQL, Postgres, etc.).
+
+4️⃣ Native SQL Queries
+
+❓ What is a Native Query?
+✅ Answer:
+A native query is pure SQL, written exactly as it would run in the database.
+
+👉 Uses table names and column names
+
+❓ Native query example
+✅ Answer:
+@Query(value = "SELECT * FROM employee WHERE department = ?1", nativeQuery = true)
+List<Employee> findByDepartmentNative(String department);
+✔ Uses table name employee
+✔ Uses column department
+✔ nativeQuery = true is mandatory
+
+❓ Native query with named parameters
+✅ Answer:
+@Query(
+  value = "SELECT * FROM employee WHERE salary > :salary",
+  nativeQuery = true
+)
+List<Employee> findHighSalary(@Param("salary") double salary);
+
+
+❓ Native query returning partial columns
+✅ Answer:
+@Query(
+  value = "SELECT name, department FROM employee",
+  nativeQuery = true
+)
+List<Object[]> fetchNameAndDepartment();
+
+⚠ Requires manual mapping
+⚠ Less type-safe
+
+❓ Can native queries return DTO directly?
+✅ Answer:
+Yes, but requires:
+
+Interface-based projection or
+
+@SqlResultSetMapping (advanced)
+
+👉 JPQL is simpler for DTOs
+
+❓ Why native queries are faster sometimes?
+✅ Answer:
+Because:
+
+No ORM abstraction
+
+Direct DB execution
+
+Can use DB-specific optimizations
+
+5️⃣ JPQL vs Native Query (Interview Gold)
+
+❓ JPQL vs Native SQL — key difference
+✅ Answer:
+Feature	           JPQL	      Native SQL
+Works on	       Entities	    Tables
+DB portability	  ✅ High	    ❌ Low
+Compile-time safety	✅ Better 	❌ Less
+ORM features	    ✅ Yes	      ❌ Limited
+Performance tuning	❌ Limited	✅ Full
+
+❓ When should you use JPQL?
+✅ Answer:
+Use JPQL when:
+Query is entity-centric
+Database portability matters
+You want cleaner, safer code
+DTO projections are required
+👉 Default choice
+
+❓ When should you use Native SQL?
+✅ Answer:
+Use Native queries when:
+Complex joins / window functions
+Vendor-specific SQL
+Performance-critical queries
+Legacy database queries
+
+❓ Interview question:
+“Which one do you prefer — JPQL or Native?”
+✅ Answer:
+“I prefer JPQL by default for portability and maintainability.
+I use **native queries only when JPQL cannot express the required logic or for performance-critical cases.”
+
+❓ Does Spring Data JPA encourage native queries?
+✅ Answer:
+No.
+Spring Data JPA encourages:
+1️⃣ Derived queries
+2️⃣ JPQL
+3️⃣ Native queries (last option)
+
+❓ Can JPQL replace all SQL?
+✅ Answer:
+No.
+JPQL cannot handle:
+DB-specific functions
+Advanced analytics queries
+Stored procedures efficiently
+
+📁 PROJECT STRUCTURE (Correct Design)
+service
+ ├── EmployeeService.java        <-- INTERFACE
+ └── impl
+     └── EmployeeServiceImpl.java <-- IMPLEMENTATION
+
+🔵 EmployeeService (INTERFACE)
+
+📄 EmployeeService.java
+public interface EmployeeService {
+    List<EmployeeDto> getAll();
+    EmployeeDto getById(Long id);
+    EmployeeDto create(EmployeeDto dto);
+}
+
+
+🔹 NO @Service here
+🔹 NO business logic
+🔹 Just contract
+
+🟢 EmployeeServiceImpl (IMPLEMENTATION)
+📄 EmployeeServiceImpl.java
+
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+
+    private final EmployeeRepository repository;
+
+    public EmployeeServiceImpl(EmployeeRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public List<EmployeeDto> getAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public EmployeeDto getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found"));
+    }
+}
+
+
+🔹 @Service goes ONLY here
+🔹 Spring registers this class as a bean
+
+🔴 WHY CONTROLLER IMPORTS INTERFACE?
+
+📄 EmployeeController.java
+
+@RestController
+public class EmployeeController {
+
+    private final EmployeeService employeeService;
+
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+}
+
+❓ Why not EmployeeServiceImpl?
+Because:
+You don’t care HOW it works
+You care WHAT it provides
+Spring does:
+EmployeeService  --->  EmployeeServiceImpl
+automatically.
+
+🧩 HOW SPRING RESOLVES THIS?
+Controller asks for EmployeeService
+Spring scans beans
+Finds:
+EmployeeServiceImpl implements EmployeeService
+
+Injects it automatically
+🔥 This is Dependency Injection
+⚠️ WHAT IF MULTIPLE IMPLEMENTATIONS EXIST?
+
+Example:
+EmployeeServiceImpl
+EmployeeServiceMockImpl
+
+
+Then Spring gets confused.
+✅ Solution:
+@Primary
+@Service
+public class EmployeeServiceImpl implements EmployeeService
+
+
+OR
+
+@Autowired
+@Qualifier("employeeServiceImpl")
+EmployeeService service;
+
+🎯 INTERVIEW READY ANSWER
+
+Q: Why inject interface instead of implementation?
+✅ Loose coupling
+✅ Easy testing (Mockito)
+✅ Swap implementations easily
+✅ Follows SOLID principles
+
+Q: Who decides which implementation is used?
+✅ Spring IoC Container

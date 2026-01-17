@@ -4,8 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "employees")
 public class Employee {
 
     @Id()
@@ -13,6 +15,7 @@ public class Employee {
     private Long id;
     private String name;
     private String department;
+    private double salary;
 
     //required by JPA
     public Employee() {
@@ -42,5 +45,12 @@ public class Employee {
         this.department = department;
     }
 
+    public double getSalary(){
+        return this.salary;
+    }
+
+    public void setSalary(double salary){
+        this.salary = salary;
+    }
 
 }
