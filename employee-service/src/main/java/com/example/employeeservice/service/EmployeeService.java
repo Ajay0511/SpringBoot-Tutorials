@@ -27,14 +27,24 @@ public class EmployeeService {
         this.repository = repository;
     }
 
-    public EmployeeDto create(EmployeeDto employeeDto) {
-        EmployeeDto employee = new EmployeeDto(
-            (long) employeeDataStore.size() + 1,
-            employeeDto.getName(),
-            employeeDto.getDepartment()
+    private EmployeeDto mapToDto(Employee employee) {
+        return new EmployeeDto(
+            employee.getId(),
+            employee.getName(),
+            employee.getDepartment()
         );
-        employeeDataStore.put(employee.getId(), employee);
-        return employee;
+    }
+
+    public EmployeeDto create(EmployeeDto employeeDto) {
+        // EmployeeDto employee = new EmployeeDto(
+        //     (long) employeeDataStore.size() + 1,
+        //     employeeDto.getName(),
+        //     employeeDto.getDepartment()
+        // );
+        // employeeDataStore.put(employee.getId(), employee);
+        Employee employee = new Employee(1L, employeeDto.getName(), employeeDto.getDepartment());
+        Employee saved = repository.save(employee);
+        return mapToDto(saved);
     }
 
     public List<EmployeeDto> getAll() {

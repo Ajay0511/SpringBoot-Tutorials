@@ -36,6 +36,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     // public String getEmployee(){
     //     return "Employee from Employee Repository";
     // }
+
+    List<Employee> findAll();
+
     List<Employee> findByDepartment(String department);
 
     //JPQL

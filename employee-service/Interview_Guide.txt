@@ -1108,3 +1108,91 @@ Q: Why inject interface instead of implementation?
 
 Q: Who decides which implementation is used?
 ✅ Spring IoC Container
+
+
+📅 DAY 11 — Unit Testing (JUnit 5 + Mockito)
+❓ What is unit testing?
+✅ Testing individual units (methods/classes) in isolation without external dependencies.
+
+❓ What is the difference between unit test and integration test?
+✅ Unit test: tests a single class using mocks
+✅ Integration test: loads Spring context and real beans
+
+❓ Why do we use Mockito?
+✅ To mock dependencies and isolate the class under test.
+
+❓ What is @Mock?
+✅ Creates a mock object for a dependency.
+
+❓ What is @InjectMocks?
+✅ Injects mocked dependencies into the class under test.
+
+❓ What is @ExtendWith(MockitoExtension.class)?
+✅ Enables Mockito annotations in JUnit 5.
+
+❓ Difference between @MockBean and @Mock?
+✅ @Mock → pure unit tests (no Spring context)
+✅ @MockBean → Spring Boot tests (replaces bean in context)
+
+❓ What is stubbing?
+✅ Defining behavior of a mock (when(...).thenReturn(...))
+
+❓ Why should repositories be mocked in service tests?
+✅ To avoid database dependency and keep tests fast and isolated.
+
+❓ Should controllers be unit-tested?
+✅ Rarely. Controllers are better tested using integration tests (MockMvc).
+
+
+📅 DAY 12 — Integration Testing 
+
+❓ 1. What is Integration Testing in Spring Boot?
+✅ Answer:
+Integration Testing checks the interaction between multiple layers (controller → service → repository → database).
+Runs with the full Spring context.
+Ensures that all components work together as expected, not just in isolation.
+Unlike unit tests, it tests the actual wiring and dependencies, not mocks (except external services).
+
+❓ 2. Why do we need MockMvc in Spring Boot tests?
+✅ Answer:
+MockMvc simulates HTTP requests to your controllers without starting a server.
+Allows testing of REST endpoints (GET, POST, PUT, DELETE, PATCH).
+Lets you validate HTTP status codes, response body, headers, and JSON structure.
+Enables testing controller logic and request/response handling in isolation from the network.
+
+❓ 3. What is the difference between Unit Testing and Integration Testing?
+✅ Answer:
+
+Feature	          Unit Testing	                   Integration Testing
+Scope	        Single class or method	              Multiple layers together
+Dependencies	    Mocked	                        Real (Spring context)
+Purpose	Verify correctness of a method/class	    Verify system components work together
+Execution	        Fast	                          Slower (loads Spring context)
+Example	Testing .create() in isolationTesting     /employees endpoint end-to-end
+
+
+❓ 4. How do you test REST APIs in Spring Boot without starting the server?
+✅ Answer:
+Use MockMvc provided by Spring Boot testing framework.
+Configure it with @SpringBootTest and @AutoConfigureMockMvc.
+Perform requests using mockMvc.perform(get("/url")) or post("/url").
+No need to run the actual Tomcat/Jetty server.
+
+❓ 5. How do you test HTTP status codes, response JSON, and error handling in Spring Boot?
+✅ Answer:
+Use MockMvc andExpect() methods:
+.andExpect(status().isOk()) → checks HTTP 200
+.andExpect(jsonPath("$.id").value(1)) → checks JSON field
+.andExpect(jsonPath("$.name").value("Ajay")) → checks another field
+
+For validation or exceptions:
+.andExpect(status().isBadRequest()) → validation failure
+.andExpect(jsonPath("$.error").value("Invalid data")) → exception message
+
+❓ 6. What annotations are used to configure integration tests with Spring Boot and MockMvc?
+✅ Answer:
+@SpringBootTest → Loads the full Spring context.
+@AutoConfigureMockMvc → Configures MockMvc automatically.
+@ExtendWith(MockitoExtension.class) → Only for Mockito unit tests. Not needed for full integration tests.
+@Transactional → Optional, to rollback DB changes after each test.
+@Test → Marks the test method.
