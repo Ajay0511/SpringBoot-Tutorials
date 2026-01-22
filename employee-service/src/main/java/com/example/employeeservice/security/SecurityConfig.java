@@ -38,13 +38,19 @@ public class SecurityConfig {
         //     .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
         //     // Use HTTP Basic authentication
         //     .httpBasic(Customizer.withDefaults());
-        http.
-            csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/login").
-            permitAll()
-            .anyRequest().authenticated())
-            .addFilterBefore(jwtFilter,UsernamePasswordAuthenticationFilter.class);
+        // http.
+            // csrf(csrf -> csrf.disable())
+            // .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/login").
+            // permitAll()
+           // .anyRequest().authenticated())
+           // .addFilterBefore(jwtFilter,UsernamePasswordAuthenticationFilter.class);
 
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/actuator/**").permitAll()
+                .anyRequest().permitAll()
+            );
         return http.build();
 
     }

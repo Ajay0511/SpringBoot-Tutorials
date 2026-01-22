@@ -1196,3 +1196,96 @@ For validation or exceptions:
 @ExtendWith(MockitoExtension.class) → Only for Mockito unit tests. Not needed for full integration tests.
 @Transactional → Optional, to rollback DB changes after each test.
 @Test → Marks the test method.
+
+
+📅 Day 13 — Actuator + Custom Health Indicators
+
+❓ 1. What is Spring Boot Actuator?
+✅ Answer:
+Spring Boot Actuator provides production-ready features like:
+Health checks
+Metrics
+Application info
+Monitoring endpoints
+It helps in observing and managing applications in real time.
+
+❓ 2. What are some commonly used Actuator endpoints?
+✅ Answer:
+/actuator/health → application health
+/actuator/info → application info
+/actuator/metrics → performance metrics
+/actuator/env → environment properties
+/actuator/beans → Spring beans list
+
+❓ 3. How do you enable Actuator endpoints in Spring Boot?
+✅ Answer:
+Add dependency:
+spring-boot-starter-actuator
+
+Expose endpoints in application.yml or application.properties:
+management.endpoints.web.exposure.include=health,info,metrics
+
+❓ 4. What is the default health status returned by Actuator?
+✅ Answer:
+UP → application is healthy
+DOWN → application is unhealthy
+OUT_OF_SERVICE → temporarily unavailable
+UNKNOWN → health cannot be determined
+
+❓ 5. How do you customize /actuator/info endpoint?
+✅ Answer:
+Add properties:
+info.app.name=Employee Service
+info.app.version=1.0.0
+info.app.description=Employee Management API
+
+Then access:
+/actuator/info
+
+❓ 6. What is a custom Health Indicator in Spring Boot?
+✅ Answer:
+A custom Health Indicator allows you to define application-specific health checks
+(e.g. database, external API, cache).
+
+❓ 7. How do you create a custom Health Indicator?
+✅ Answer:
+Implement HealthIndicator:
+
+@Component
+public class DatabaseHealthIndicator implements HealthIndicator {
+    @Override
+    public Health health() {
+        return Health.up()
+                .withDetail("database", "MySQL is reachable")
+                .build();
+    }
+}
+
+❓ 8. How does a custom Health Indicator appear in /actuator/health?
+✅ Answer:
+It appears under components section:
+
+{
+  "status": "UP",
+  "components": {
+    "database": {
+      "status": "UP",
+      "details": {
+        "database": "MySQL is reachable"
+      }
+    }
+  }
+}
+
+❓ 9. How do you restrict Actuator endpoints in production?
+✅ Answer:
+Expose only required endpoints:
+management.endpoints.web.exposure.include=health,info
+management.endpoints.web.exposure.exclude=env,beans
+
+❓ 10. Why is Actuator important in microservices?
+✅ Answer:
+Enables health checks for service discovery
+Helps monitoring and alerting
+Supports readiness and liveness probes
+Critical for Kubernetes and cloud deployments
