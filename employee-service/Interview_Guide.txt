@@ -1289,3 +1289,87 @@ Enables health checks for service discovery
 Helps monitoring and alerting
 Supports readiness and liveness probes
 Critical for Kubernetes and cloud deployments
+
+
+📅 Day 14 | Spring Profiles & Environment-based Beans
+
+❓ What do Spring Profiles allow you to do?
+✅ Spring Profiles allow you to:
+Run the same codebase in different environments
+Change configs, beans, databases, and features per environment
+Avoid if–else hacks inside business code
+
+👉 Common profiles:
+dev
+test
+prod
+
+❓ How does Spring Boot load profile-based configuration?
+✅ Spring Boot:
+Loads application.properties first
+Overrides it with application-{profile}.properties
+Merges configurations automatically
+
+❓ How do you activate a Spring Profile?
+✅ You can activate a profile using:
+application.properties
+JVM argument
+Environment variable
+Command line argument
+
+❓ Example ways to activate a profile?
+✅
+spring.profiles.active=dev
+-Dspring.profiles.active=prod
+--spring.profiles.active=test
+
+
+❓ What is the @Profile annotation used for?
+✅ @Profile is used to:
+Load beans only for specific environments
+Keep environment-specific beans separate
+Prevent unnecessary beans from loading
+
+❓ Where can @Profile be applied?
+✅ @Profile can be applied on:
+@Configuration classes
+@Component classes
+@Bean methods
+
+❓ How do you define multiple profiles for a bean?
+✅ Use:
+@Profile({"dev","test"})
+👉 Bean loads if any one profile is active.
+
+❓ What happens if no profile is active?
+✅ Spring:
+Uses the default profile
+Loads all beans without @Profile annotation
+
+❓ What is spring.profiles.default?
+✅ It:
+Acts as a fallback profile
+Is used only when no active profile is set
+
+❓ How are Spring Profiles used with databases?
+✅ Common pattern:
+dev → H2 / local DB
+test → Test DB
+prod → Production DB
+
+
+❓ How do profiles help in CI/CD pipelines?
+✅ Profiles allow:
+Same JAR to be deployed everywhere
+Environment behavior controlled externally
+Safer and repeatable deployments
+
+❓ Can profiles be changed at runtime?
+✅ ❌ No
+👉 Profiles are evaluated only at application startup
+
+❓ Common mistake with Spring Profiles?
+✅
+Writing environment checks in code
+Not using profiles for DB and security configs
+Committing prod configs to Git
