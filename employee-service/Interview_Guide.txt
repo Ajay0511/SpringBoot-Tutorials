@@ -1373,3 +1373,151 @@ Safer and repeatable deployments
 Writing environment checks in code
 Not using profiles for DB and security configs
 Committing prod configs to Git
+
+
+📅 Day 15 | Spring Cloud – Core Concepts
+
+❓ 1. What is Spring Cloud?
+✅ Answer:
+Spring Cloud is a framework that provides tools to build distributed systems and microservices easily.
+It solves problems like:
+Service discovery
+Configuration management
+Load balancing
+Fault tolerance
+API gateway
+
+
+❓ 2. Why do we need Spring Cloud when we already have Spring Boot?
+✅ Answer:
+Spring Boot helps build single services, but Spring Cloud helps manage multiple services.
+👉 Spring Cloud adds:
+Centralized config
+Inter-service communication
+Resilience
+Dynamic scaling support
+
+❓ 3. What is Service Discovery?
+✅ Answer:
+Service Discovery allows services to find each other dynamically without hardcoding IPs or ports.
+👉 Instead of:
+http://localhost:8081
+
+We use:
+http://employee-service
+
+/*
+A service registry is a centralized, highly available database or directory used in microservices architecture 
+to track service instances, their network locations (IP addresses and ports), and metadata.
+
+Service discovery is the automated process of detecting devices, services, or network locations (IP addresses and ports)
+in a distributed system, such as microservices, to enable seamless communication.
+*/
+❓ 4. What is Eureka?
+✅ Answer:
+Eureka is a Service Registry provided by Spring Cloud Netflix.
+It:
+Registers services at startup
+Keeps track of live instances
+Allows clients to discover services dynamically
+
+❓ 5. Difference between Client-side and Server-side Service Discovery?
+✅ Answer:
+Client-side (Eureka):
+Client asks registry
+Client chooses instance
+More control, more responsibility
+
+Server-side (Kubernetes):
+Load balancer handles discovery
+Client unaware of instances
+
+
+❓ 6. What is Spring Cloud Config?
+✅ Answer:
+Spring Cloud Config provides centralized configuration management.
+👉 Configs are stored in:
+Git
+File system
+Vault
+👉 All services fetch configs at runtime.
+
+❓ 7. Why centralized configuration is important?
+✅ Answer:
+Centralized config helps to:
+Avoid duplicated configs
+Change config without redeploying
+Maintain environment-specific values
+Improve security & consistency
+
+❓ 8. What is an API Gateway?
+
+✅ Answer:
+An API Gateway is a single entry point for all clients.
+It handles:
+Routing
+Authentication
+Rate limiting
+Logging
+Load balancing
+
+❓ 9. What is Spring Cloud Gateway?
+✅ Answer:
+Spring Cloud Gateway is a non-blocking API Gateway built on Spring WebFlux.
+It supports:
+Dynamic routing
+Filters (pre/post)
+JWT validation
+Path rewriting
+
+❓ 10. What is Load Balancing in Spring Cloud?
+✅ Answer:
+Load balancing distributes traffic across multiple instances of a service.
+Spring Cloud uses:
+Spring Cloud LoadBalancer
+Earlier: Ribbon (now deprecated)
+
+❓ 11. What is Circuit Breaker?
+✅ Answer:
+A Circuit Breaker prevents cascading failures when a service is down.
+It:
+Stops calling failing services
+Returns fallback response
+Recovers automatically
+Common implementation:
+👉 Resilience4j
+
+❓ 12. What is Fault Tolerance?
+✅ Answer:
+Fault tolerance ensures system stability when:
+A service crashes
+Network latency increases
+Dependencies fail
+
+Achieved using:
+Circuit breakers
+Timeouts
+Retries
+Bulkheads
+
+❓ 13. What is Distributed Tracing?
+✅ Answer:
+Distributed tracing tracks a request across multiple microservices.
+It helps:
+Debug latency issues
+Trace failures
+Understand call flow
+
+Tools:
+Zipkin
+Sleuth
+OpenTelemetry
+
+❓ 15. What are common Spring Cloud components?
+✅ Answer:
+Eureka (Service Discovery)
+Config Server (Centralized config)
+Gateway (API Gateway)
+LoadBalancer
+Resilience4j
+Sleuth / Zipkin
