@@ -13,6 +13,6 @@ public class DepartmentClient {
 
     public String getDepartmentName(Long empId){
         //Service name instead of URL for load balancing
-        return restTemplate.getForObject("http://localhost:8081/api/v1/department/" + empId, String.class);
+        return restTemplate.getForObject("http://department-service/api/v1/department/" + empId, String.class);
     }
 }

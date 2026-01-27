@@ -44,3 +44,8 @@ info:
 
 jwt:
   secret: qawsedrftgvcxzasdfrewq1234567890!@#$%^&*()_+wswsdffxvgdxctyujhazx
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

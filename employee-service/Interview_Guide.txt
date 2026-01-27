@@ -1521,3 +1521,90 @@ Gateway (API Gateway)
 LoadBalancer
 Resilience4j
 Sleuth / Zipkin
+
+
+📅 Day 13 — Eureka Server & Service Discovery 
+
+❓ What is Eureka?
+✅ Answer:
+Eureka is a service registry used in microservices architecture where services register themselves and discover other services dynamically.
+
+❓ Why do we need Service Discovery in Microservices?
+✅ Answer:
+Services scale dynamically
+IP addresses and ports change frequently
+Avoids hard-coding service URLs
+Enables load balancing and fault tolerance
+
+❓ What is Eureka Server?
+✅ Answer:
+Eureka Server acts as a registry that stores information about all registered microservices.
+
+❓ What is Eureka Client?
+✅ Answer:
+A Eureka Client is a microservice that:
+Registers itself with Eureka Server
+Discovers other services from Eureka
+
+❓ What problems does Eureka solve?
+✅ Answer:
+Dynamic service discovery
+Load balancing between instances
+Loose coupling between services
+High availability
+
+❓ How does Service Registration work in Eureka?
+✅ Answer:
+Service starts
+Registers with Eureka Server
+Sends periodic heartbeat signals
+Eureka keeps service metadata
+
+❓ What is Service Discovery?
+✅ Answer:
+It is the process by which a microservice finds the location of another service using the service registry.
+
+❓ What is a Heartbeat in Eureka?
+✅ Answer:
+Heartbeat is a periodic signal sent by a service to Eureka Server to indicate that it is alive.
+
+❓ What happens if a service stops sending heartbeats?
+✅ Answer:
+Eureka removes the service instance from the registry.
+
+❓ What annotation is used to enable Eureka Server?
+✅ Answer:
+@EnableEurekaServer
+
+❓ What annotation is used to enable Eureka Client?
+✅ Answer:
+@EnableEurekaClient
+
+❓ What is Client-Side Service Discovery?
+✅ Answer:
+In client-side discovery:
+Client queries Eureka
+Client chooses an instance
+Load balancing happens on client side
+
+❓ How does Spring Cloud LoadBalancer work with Eureka?
+✅ Answer:
+It selects one instance from the available registered service instances.
+
+❓ How does Feign Client use Eureka?
+✅ Answer:
+Feign uses service name instead of URL to make REST calls.
+
+❓ What happens if Eureka Server goes down?
+✅ Answer:
+Already running services continue using cached registry
+New services cannot register
+Discovery may fail over time
+
+❓ On which port does Eureka Dashboard run by default?
+✅ Answer:
+8761
+
+❓ Can Eureka run on localhost?
+✅ Answer:
+Yes, Eureka works perfectly on localhost for development and learning.
