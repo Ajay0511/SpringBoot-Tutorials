@@ -1620,3 +1620,59 @@ Discovery may fail over time
 ❓ Can Eureka run on localhost?
 ✅ Answer:
 Yes, Eureka works perfectly on localhost for development and learning.
+
+🗓️ Day 17 — Spring Cloud Gateway
+
+❓ What is Spring Cloud Gateway?
+✅ Answer:
+Spring Cloud Gateway is an API Gateway solution provided by Spring Cloud that acts as a single entry point for all microservices.
+It routes client requests to appropriate backend services and supports load balancing, security, and monitoring.
+
+❓ Why do we need an API Gateway in microservices?
+✅ Answer:
+Provides a single entry point for all services
+Hides internal service URLs from clients
+Enables centralized authentication and authorization
+Supports load balancing and fault tolerance
+Simplifies client-side logic
+
+❓ How does Spring Cloud Gateway work?
+✅ Answer:
+Spring Cloud Gateway intercepts incoming HTTP requests, matches them against configured routes, applies filters if required, and forwards them to backend services registered with Eureka or defined via URLs.
+
+❓ Does Spring Cloud Gateway use Spring MVC?
+✅ Answer:
+No. Spring Cloud Gateway is built on Spring WebFlux, which is non-blocking and reactive.
+
+designed to handle high concurrency with fewer hardware resources by moving away from the traditional thread-per-request model. It is an alternative to the classic Spring MVC and is built on the Project Reactor library, which implements the Reactive Streams specification. 
+Key Features and Concepts
+Non-blocking I/O: 
+WebFlux uses an event-loop execution model (like Node.js) with a small, fixed-size thread pool. When an operation (e.g., a database call or remote service call) would typically block a thread in Spring MVC, WebFlux instead registers a callback and frees the thread to process other requests, significantly improving scalability for I/O-bound applications.
+
+Reactive Streams: 
+It is built on the Reactive Streams specification, ensuring efficient data flow and backpressure (a mechanism for the consumer to signal the producer to slow down the data stream to prevent being overwhelmed).
+
+Mono and Flux: 
+The core types for handling asynchronous data streams are Mono and Flux.
+Mono: Represents a publisher that emits zero or one element.
+Flux: Represents a publisher that emits zero to N elements (a stream of data).
+
+Programming Models: 
+WebFlux offers two ways to build applications:
+Annotated Controllers: 
+Uses familiar Spring MVC-style annotations (@RestController, @GetMapping, etc.) with the key difference that controller methods return Mono or Flux types.
+Functional Endpoints: 
+A lightweight, functional programming model using lambda expressions to define routing (RouterFunctions) and request handling (HandlerFunctions).
+
+
+❓ What is the role of Eureka in Spring Cloud Gateway?
+✅ Answer:
+Eureka helps Spring Cloud Gateway discover backend microservices dynamically using service names instead of hardcoded URLs.
+
+❓ Does Spring Cloud Gateway need controllers?
+✅ Answer:
+No. Spring Cloud Gateway works using route definitions and filters; it does not require controllers.
+
+❓ What happens if a service goes down?
+✅ Answer:
+If a service is unavailable, Eureka removes it from the registry and Spring Cloud Gateway stops routing traffic to that instance.
