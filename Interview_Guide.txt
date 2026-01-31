@@ -1621,6 +1621,7 @@ Discovery may fail over time
 ✅ Answer:
 Yes, Eureka works perfectly on localhost for development and learning.
 
+
 🗓️ Day 17 — Spring Cloud Gateway
 
 ❓ What is Spring Cloud Gateway?
@@ -1676,3 +1677,55 @@ No. Spring Cloud Gateway works using route definitions and filters; it does not 
 ❓ What happens if a service goes down?
 ✅ Answer:
 If a service is unavailable, Eureka removes it from the registry and Spring Cloud Gateway stops routing traffic to that instance.
+
+
+📅 Day 18 — Spring Cloud Config Server
+
+❓ What is Spring Cloud Config Server?
+✅ Answer:
+Spring Cloud Config Server provides centralized external configuration for all microservices.
+Instead of keeping application.yml inside every service, configurations are stored in a Git repository and fetched at runtime.
+
+❓ Why do we need Spring Cloud Config Server?
+✅ Answer:
+It solves major problems in microservices like:
+- Duplicate configuration across services
+- Manual config changes and redeployments
+- Environment-specific configs (dev, qa, prod)
+- Secure handling of sensitive properties
+
+❓ How does Spring Cloud Config work?
+✅ Answer:
+Config Server reads configuration from Git (or filesystem)
+Microservices act as Config Clients
+Clients fetch config on startup via HTTP
+Configuration is applied before application context loads
+
+❓ What are the main components of Spring Cloud Config?
+✅ Answer:
+Config Server – central configuration provider
+Config Client – microservices consuming configuration
+Git Repository – source of truth for configs
+
+❓ What is the default URL pattern used by Config Server?
+✅ Answer:
+/{application-name}/{profile}
+/{application-name}-{profile}.yml
+Example:
+http://localhost:8888/employee-service/dev
+
+❓ Where does Config Server load properties before Spring Boot?
+✅ Answer:
+It loads properties in the bootstrap phase, before application.yml, ensuring external config has higher priority.
+
+❓ What annotation enables Config Server?
+✅ Answer:
+@EnableConfigServer
+
+❓ Can multiple services share the same configuration?
+
+✅ Answer:
+Yes. Common configs can be placed in:
+application.yml
+application-dev.yml
+and shared across all services.
