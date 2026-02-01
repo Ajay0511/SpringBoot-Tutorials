@@ -1729,3 +1729,36 @@ Yes. Common configs can be placed in:
 application.yml
 application-dev.yml
 and shared across all services.
+
+
+📅 Day 19 – Inter-Service Communication (RestTemplate & Feign)
+
+❓ What is inter-service communication in microservices?
+✅ Inter-service communication means one microservice calls another microservice over a network, usually using HTTP or messaging, to complete a business requirement that cannot be handled by a single service alone.
+
+❓ Why is inter-service communication required in microservices architecture?
+✅ Because in microservices each service has its own database and responsibility, so to build a complete feature like employee details with department information, services must talk to each other instead of directly accessing another service database.
+
+❓ What are common ways to communicate between services in Spring Boot?
+✅ The most common approaches are RestTemplate, OpenFeign, WebClient, and asynchronous communication using message brokers like Kafka or RabbitMQ.
+
+❓ What is RestTemplate in Spring Boot?
+✅ RestTemplate is a synchronous HTTP client provided by Spring that allows one service to call another service using methods like GET, POST, PUT, and DELETE through Java code.
+
+❓ Why is RestTemplate considered old now?
+✅ RestTemplate requires a lot of boilerplate code and manual handling of URLs and responses, so modern applications prefer OpenFeign or WebClient which are cleaner and declarative.
+
+❓ What is OpenFeign?
+✅ OpenFeign is a declarative REST client where we define only an interface with annotations, and Spring automatically creates the implementation to call another service.
+
+❓ What is the main advantage of Feign over RestTemplate?
+✅ Feign reduces boilerplate code, improves readability, supports service discovery, load balancing, and integrates easily with circuit breaker patterns.
+
+❓ Is Feign synchronous or asynchronous by default?
+✅ Feign is synchronous and blocking by default, meaning the calling thread waits for the response from another service.
+
+❓ Can Feign work with Eureka and Resilience4j?
+✅ Yes, Feign can directly use Eureka service names instead of URLs and can be combined with Resilience4j for retry and circuit breaker support.
+
+❓ In our project which service will act as client?
+✅ Our Employee Service will act as client and call another service to fetch additional information.
