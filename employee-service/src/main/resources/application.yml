@@ -28,14 +28,6 @@ spring:
 server:
   port: 8080
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
-  info:
-    env:
-      enabled: true
 
 info:
   app:
@@ -65,3 +57,18 @@ resilience4j:
       departmentService:
         maxAttempts: 3
         waitDuration: 2s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+  health:
+    circuitbreakers:
+      enabled: true
+management.endpoint.health.show-details: always
