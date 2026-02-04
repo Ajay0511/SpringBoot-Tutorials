@@ -1762,3 +1762,35 @@ and shared across all services.
 
 ❓ In our project which service will act as client?
 ✅ Our Employee Service will act as client and call another service to fetch additional information.
+
+
+📅 Day 20 | Resilience4j (Circuit Breaker, Retry)
+❓ 1. What is Resilience4j?
+✅ Resilience4j is a lightweight fault tolerance library for Java and Spring Boot that provides patterns like Circuit Breaker, Retry, Rate Limiter and Bulkhead to handle failures in inter-service communication gracefully.
+
+❓ 2. Why do we need Circuit Breaker in microservices?
+✅ When one service like Department Service goes down, continuous calls from Employee Service will waste threads and increase latency, therefore Circuit Breaker stops real calls and returns a fallback response.
+
+❓ 3. What are the states of Circuit Breaker?
+✅ Circuit Breaker has three states: CLOSED where all calls are allowed, OPEN where all calls are blocked, and HALF-OPEN where limited test calls are allowed to check recovery.
+
+❓ 4. What is Retry pattern?
+✅ Retry pattern automatically calls the failed API again for a configured number of attempts before finally failing.
+
+❓ 5. Difference between Retry and Circuit Breaker?
+✅ Retry tries the same request again hoping temporary issue will be fixed, while Circuit Breaker completely stops calling the failing service for some time.
+
+❓ 6. Can Resilience4j be used with Feign client?
+✅ Yes Resilience4j integrates easily with Feign and RestTemplate in Spring Boot.
+
+❓ 7. What is fallback method?
+✅ Fallback is an alternate method that returns default response when circuit is open or all retries are failed.
+
+❓ 8. Where do we configure Resilience4j?
+✅ Configuration can be written in application.yml or application.properties with instance name.
+
+❓ 9. Can Retry and Circuit Breaker be combined?
+✅ Yes normally Retry happens first and if still failing Circuit Breaker opens.
+
+❓ 10. Is Resilience4j blocking or non-blocking?
+✅ Core library is functional and can work in both blocking and reactive environments.
