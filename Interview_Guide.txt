@@ -1794,3 +1794,66 @@ and shared across all services.
 
 ❓ 10. Is Resilience4j blocking or non-blocking?
 ✅ Core library is functional and can work in both blocking and reactive environments.
+
+
+📅 Day 21 – Distributed Tracing (Sleuth + Zipkin)
+✅ Distributed Tracing is a technique to track a single user request as it travels across multiple microservices.
+It assigns a unique Trace ID to the request and follows it through every service, database call, or HTTP call.
+
+This helps developers understand:
+- which services were called
+- in what order
+- how much time each service took
+- where failure happened
+
+Without tracing, logs of different services remain disconnected and debugging becomes very hard.
+
+
+❓ What are Trace ID and Span ID?
+✅ Trace ID → Unique ID for the entire request lifecycle across all services.
+Span ID → Unique ID for each individual step/service inside that trace.
+
+Example:
+User calls Employee Service → it calls Department Service.
+Trace ID: 789xyz
+  ├── Span 1: Employee Service
+  └── Span 2: Department Service
+
+Both services will print same Trace ID in logs so we can correlate them.
+
+
+❓ What is Spring Cloud Sleuth?
+✅Spring Cloud Sleuth is a library that automatically:
+- generates Trace ID & Span ID
+- attaches them to logs
+- propagates them in HTTP headers
+- works with RestTemplate & Feign automatically
+Developers don’t need to write manual tracing code.
+
+❓ What is Zipkin?
+✅ Zipkin is a tracing server with UI that:
+- collects tracing data from services
+- visualizes request flow
+- shows latency per service
+- helps find slow or failed services
+
+Sleuth = generates tracing
+Zipkin = displays tracing
+
+
+❓ How Sleuth + Zipkin work together?
+✅ User calls Employee Service
+- Sleuth generates Trace ID
+- Employee calls Department
+- Same Trace ID is forwarded
+- Both services send tracing data to Zipkin
+- Zipkin UI shows full flow
+
+❓ What is Sampling in tracing?
+✅ Sampling means not sending 100% of traces to Zipkin.
+To reduce load we can send:
+- 10% of requests
+- or all requests
+
+Example:
+spring.sleuth.sampler.probability=0.1

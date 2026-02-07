@@ -58,11 +58,18 @@ resilience4j:
         maxAttempts: 3
         waitDuration: 2s
 
+  ratelimiter:
+    instances:
+      departmentService:
+        limitForPeriod: 2
+        limitRefreshPeriod: 10s
+        timeoutDuration: 1s
+
 management:
   endpoints:
-    web:
-      exposure:
-        include: "*"
+      web:
+        exposure:
+          include: "*"
 
   endpoint:
     health:
@@ -71,4 +78,20 @@ management:
   health:
     circuitbreakers:
       enabled: true
-management.endpoint.health.show-details: always
+    
+
+  tracing:
+    sampling:
+      probability: 1.0
+
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{traceId:-},%X{spanId:-}]"
+
+  level:
+    io.micrometer.tracing: DEBUG
+    brave: DEBUG
