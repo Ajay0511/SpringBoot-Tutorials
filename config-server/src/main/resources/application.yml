@@ -12,3 +12,5 @@ spring:
           uri: https://github.com/<your-username>/config-repo
           default-label: main
           clone-on-start: true
+    bus:
+      enabled: true

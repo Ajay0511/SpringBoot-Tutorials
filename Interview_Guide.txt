@@ -1857,3 +1857,86 @@ To reduce load we can send:
 
 Example:
 spring.sleuth.sampler.probability=0.1
+
+📅 Day 22 – Spring Cloud Bus
+❓ What is Spring Cloud Bus?
+✅ Spring Cloud Bus is a mechanism to broadcast events across multiple microservice instances using a message broker like RabbitMQ or Kafka.
+It allows services to communicate configuration changes, refresh events, or custom events without calling each instance manually.
+
+❓ Why do we need Spring Cloud Bus?
+✅ When we use Spring Cloud Config Server, refreshing configuration requires calling:
+POST /actuator/refresh
+on every service instance separately.
+Spring Cloud Bus solves this by:
+- Sending one refresh event
+- Broadcasting to all instances
+- Keeping all services in sync automatically.
+
+❓ Which message brokers are supported?
+✅ Spring Cloud Bus supports:
+- RabbitMQ (most common)
+- Kafka
+- Any Spring Cloud Stream compatible broker.
+
+❓ How does Spring Cloud Bus work internally?
+✅ A service publishes an event to the broker
+Spring Cloud Bus listens to that broker
+All subscribed services receive the event
+Each service performs the action (e.g., refresh configuration).
+
+❓ What are common use cases of Spring Cloud Bus?
+✅ Refresh configuration across services
+Clear cache in all instances
+Broadcast custom domain events
+Synchronize application state.
+
+❓ What endpoint is used to trigger Bus refresh?
+✅ POST /actuator/busrefresh
+This triggers refresh for all services connected to the bus.
+
+Advanced Message Queuing Protocol (AMQP) is an open-standard, binary application layer protocol designed for high-performance, reliable, and secure message-oriented middleware.
+It facilitates interoperability between applications, platforms, and brokers (e.g., RabbitMQ) by handling routing, queuing, and reliable delivery with message guarantees, making it ideal for financial services, IoT, and distributed systems. 
+Key Aspects of AMQP
+Protocol Model: Utilizes a publish-subscribe model where producers send messages to exchanges, which then distribute them to queues based on defined rules (bindings).
+Security & Reliability: Supports TLS for encryption and SASL for authentication, ensuring secure communication. It offers message delivery guarantees like at-most-once, at-least-once, and exactly-once.
+Key Features: Enables efficient, interoperable messaging across different languages and operating systems, often used in RabbitMQ or as a standard for business messaging.
+Versions: AMQP 1.0 is an OASIS and ISO/IEC 19464 standard. 
+
+📅 Day 23 Kafka / RabbitMQ 
+❓ Q1. What is a Message Broker and why do we need it?
+✅ A message broker is middleware that enables asynchronous communication between microservices. Instead of calling another service directly using REST,
+a service can publish a message to the broker and other services can consume it whenever they are available. This removes tight coupling, improves reliability, 
+supports retry, and allows event-driven architecture where services react to events rather than waiting for synchronous responses.
+
+❓ Q2. What is RabbitMQ?
+✅ RabbitMQ is a message broker based on the AMQP protocol. It uses queues, exchanges, and bindings to route messages from producers to consumers. It is best suited for reliable task processing, background jobs, and scenarios where guaranteed delivery with acknowledgements is required.
+
+❓ Q3. What is Kafka?
+✅Kafka is a distributed event streaming platform that stores messages in topics as a log. It is designed for high throughput, fault tolerance, and real-time data streaming. 
+Kafka retains messages for a configurable time and allows multiple consumers to read the same data independently.
+
+❓ Q4. Difference between Kafka and RabbitMQ?
+✅ Kafka is log-based and optimized for streaming large volumes of data with high throughput, while RabbitMQ is queue-based and optimized for reliable message delivery with complex routing. 
+Kafka stores messages for a long time and supports replay, whereas RabbitMQ removes messages after consumption by default. Kafka is pull-based; RabbitMQ is push-based.
+
+❓ Q5. What are core components of RabbitMQ?
+✅ RabbitMQ has producers, exchanges, queues, bindings, and consumers. Producers send messages to an exchange. Exchange routes messages to queues based on routing rules. 
+Consumers read messages from queues and acknowledge them after processing.
+
+❓ Q6. What are core components of Kafka?
+✅ Kafka contains producers, topics, partitions, brokers, consumers, and consumer groups. Producers publish messages to topics. Topics are divided into partitions for scalability. 
+Consumers read messages using offsets, and consumer groups enable parallel processing.
+
+❓ Q7. When should we use RabbitMQ?
+✅RabbitMQ is preferred when we need complex routing, priority queues, guaranteed delivery, request-response patterns, and background job processing where each message must be processed exactly once.
+
+❓ Q8. When should we use Kafka?
+✅Kafka should be used for event streaming, log aggregation, analytics pipelines, real-time data processing, and scenarios where messages must be stored and replayed multiple times by different consumers.
+
+❓ Q9. What is acknowledgment in RabbitMQ?
+✅Acknowledgment is a signal sent by the consumer to RabbitMQ after successful processing of a message. If acknowledgment is not received, RabbitMQ requeues the message to avoid data loss.
+
+❓ Q10. What is consumer group in Kafka?
+✅A consumer group is a set of consumers that share the work of reading from Kafka topics. Each partition is read by only one consumer in a group, enabling parallel and scalable processing.
+
+Controller → Producer → RabbitTemplate → Exchange → Queue → Consumer ✔

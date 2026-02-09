@@ -10,6 +10,18 @@ spring:
     username: root
     password: pass
     driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  cloud:
+    bus:
+      enabled: true
+      refresh:
+        enabled: true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
   jpa:
     show-sql: true
@@ -95,3 +107,6 @@ logging:
   level:
     io.micrometer.tracing: DEBUG
     brave: DEBUG
+
+employee:
+  message: updated via bus Config
