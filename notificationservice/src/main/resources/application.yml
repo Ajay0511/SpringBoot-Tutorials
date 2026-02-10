@@ -8,5 +8,12 @@ spring:
         username: guest
         password: guest
 
+    kafka:
+        bootstrap-servers: localhost:9092
+
+        consumer:
+            group-id: employee-group
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 server:
     port: 9091

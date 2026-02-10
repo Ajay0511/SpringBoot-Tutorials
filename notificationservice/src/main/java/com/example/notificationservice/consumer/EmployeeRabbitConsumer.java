@@ -1,16 +1,15 @@
 package com.example.notificationservice.consumer;
 
-import com.example.notificationservice.model.EmployeeEvent;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmployeeConsumer {
+public class EmployeeRabbitConsumer {
 
     @RabbitListener(queues = "employee.queue")
     public void consume(String message) {
 
-        System.out.println("✅ Message received in Notification Service: "
+        System.out.println("✅ Message received in Notification Service using rabbit mq: "
                 + message);
 
         // Here you can:
