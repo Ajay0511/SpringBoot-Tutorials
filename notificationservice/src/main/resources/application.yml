@@ -7,6 +7,14 @@ spring:
         port: 5672
         username: guest
         password: guest
+    
+    cloud:
+        stream:
+            default-binder: kafka
+            bindings:
+                employeeEvent-in-0:
+                    destination: employee-topic
+                    content-type: text/plain
 
     kafka:
         bootstrap-servers: localhost:9092

@@ -1940,3 +1940,88 @@ Consumers read messages using offsets, and consumer groups enable parallel proce
 ✅A consumer group is a set of consumers that share the work of reading from Kafka topics. Each partition is read by only one consumer in a group, enabling parallel and scalable processing.
 
 Controller → Producer → RabbitTemplate → Exchange → Queue → Consumer ✔
+
+
+📅 Day 24 – Event-Driven Architecture (Spring Cloud Stream)
+❓  Why Event-Driven?
+✅ Instead of:
+Employee Service → REST → Notification Service
+
+We do:
+Employee Service → EVENT → Kafka/RabbitMQ → Notification Service
+
+Benefits
+Loose coupling
+Async processing
+Retry & durability
+Multiple consumers
+Technology agnostic
+
+❓  What is Spring Cloud Stream?
+✅ It abstracts:
+Kafka
+RabbitMQ
+Any broker
+
+👉 You don’t use:
+KafkaTemplate
+RabbitTemplate
+👉 You write only business logic as functions
+
+❓ Q1. What is Event-Driven Architecture?
+✅ Answer:
+Event-Driven Architecture (EDA) is a design where:
+Services communicate through events instead of direct REST calls.
+One service publishes an event → other services consume it asynchronously.
+Example:
+Employee Created → Notification Service sends email.
+
+❓ Q2. What is an Event?
+✅  Answer:
+An event is:
+A record of something that has happened in the system
+Immutable
+Contains minimal business data
+Example:
+
+{
+  "employeeId": "101",
+  "action": "CREATED"
+}
+
+❓ Q3. Difference between REST vs Event-Driven?
+✅ Answer:
+REST	            Event Driven
+Synchronous	      Asynchronous
+Tight coupling  	Loose coupling
+Caller waits	    Fire & forget
+Hard to scale	    Highly scalable
+
+❓ Q4. What is Spring Cloud Stream?
+✅ Answer:
+Spring Cloud Stream is:
+Abstraction over Kafka / RabbitMQ
+Developer writes only business logic
+No KafkaTemplate or RabbitTemplate needed
+Uses functional programming model
+
+❓ Q5. What are Bindings?
+✅ Answer:
+Bindings connect:
+Application code → Broker topic/queue
+Defined in application.yml
+Example: employeeEvent-out-0
+
+❓ Q6. What is Consumer Group?
+✅ Answer:
+Multiple instances share same group
+Each message processed by only one instance
+Provides load balancing
+
+❓ Q7. Advantages of Spring Cloud Stream?
+✅ Answer:
+Broker independent
+Built-in retry
+DLQ support
+Easy scaling
+Functional model

@@ -23,6 +23,20 @@ spring:
       refresh:
         enabled: true
 
+    stream:
+      default-binder: kafka
+
+      bindings:
+        employeeEvent-out-0:
+          destination: employee-topic
+          producer:
+            useNativeEncoding: true
+
+        employeeEvent-in-0:
+          destination: employee-topic
+          group: employee-group
+
+
   rabbitmq:
     host: localhost
     port: 5672
